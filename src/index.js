@@ -59,3 +59,15 @@ const loop = () =>
     window.requestAnimationFrame(loop)
 }
 loop()
+
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
+
+window.addEventListener('contextmenu', (event) =>
+{
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    cube.position.x = mouse.x
+    cube.position.y = mouse.y
+})
