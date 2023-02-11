@@ -1,73 +1,58 @@
 import './style/main.css'
 import * as THREE from 'three'
 
-/**
- * Sizes
- */
-const sizes = {}
-sizes.width = window.innerWidth
-sizes.height = window.innerHeight
 
-window.addEventListener('resize', () =>
-{
-    // Save sizes
-    sizes.width = window.innerWidth
-    sizes.height = window.innerHeight
 
-    // Update camera
-    camera.aspect = sizes.width / sizes.height
-    camera.updateProjectionMatrix()
+// Init scene
+const scene = new THREE.Scene();
 
-    // Update renderer
-    renderer.setSize(sizes.width, sizes.height)
-})
+// Init camera
+let width = window.innerWidth
+let height = window.innerHeight
+const camera = new THREE.OrthographicCamera(
+  -width/2, width/2, height/2, -height/2, 1, 1000
+);
+camera.position.z = 1000;
 
-/**
- * Environnements
- */
-// Scene
-const scene = new THREE.Scene()
-
-// Camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.z = 3
-scene.add(camera)
-
-// Test
-const cube = new THREE.Mesh(new THREE.BoxBufferGeometry(1, 1, 1), new THREE.MeshNormalMaterial())
-scene.add(cube)
-
-// Renderer
+// Init renderer
 const renderer = new THREE.WebGLRenderer({
-    canvas: document.querySelector('.webgl')
+  canvas: document.querySelector('.webgl')
 })
 renderer.setPixelRatio(window.devicePixelRatio)
-renderer.setSize(sizes.width, sizes.height)
+renderer.setSize(width, height)
 
-/**
- * Loop
- */
-const loop = () =>
-{
-    // Update
-    cube.rotation.y += 0.01
+// Init square
+const geometry = new THREE.PlaneGeometry( 100, 100, 1, 1 );
+const material = new THREE.MeshBasicMaterial( { color: 0xff0000, side: THREE.DoubleSide } );
+const square = new THREE.Mesh( geometry, material );
+scene.add( square );
 
-    // Render
-    renderer.render(scene, camera)
-
-    // Keep looping
-    window.requestAnimationFrame(loop)
+// Rendered loop
+function animate() {
+  requestAnimationFrame( animate );
+  renderer.render( scene, camera );
 }
-loop()
+animate();
 
-var raycaster = new THREE.Raycaster();
-var mouse = new THREE.Vector2();
+//Window resize
+window.addEventListener('resize', () => {
+  width = window.innerWidth
+  height = window.innerHeight
+  renderer.setSize(width, height);
 
+  camera.left = -width / 2;
+  camera.right = width / 2;
+  camera.top = height / 2;
+  camera.bottom = -height / 2;
+  camera.updateProjectionMatrix();      
+})
+
+// Move onclick
 window.addEventListener('contextmenu', (event) =>
 {
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-    cube.position.x = mouse.x
-    cube.position.y = mouse.y
+    var mousePosistion = new THREE.Vector2();
+    mousePosistion.x = event.clientX;
+    mousePosistion.y = event.clientY;
+    square.position.x = mousePosistion.x - width/2
+    square.position.y = -mousePosistion.y + height/2
 })
