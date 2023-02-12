@@ -1,7 +1,10 @@
 import './style/main.css'
 import * as THREE from 'three'
 
-
+// State
+let isMoving = false;
+let speedX = 0;
+let speedY = 0;
 
 // Init scene
 const scene = new THREE.Scene();
@@ -29,6 +32,7 @@ scene.add( square );
 
 // Rendered loop
 function animate() {
+  update()
   requestAnimationFrame( animate );
   renderer.render( scene, camera );
 }
@@ -50,9 +54,28 @@ window.addEventListener('resize', () => {
 // Move onclick
 window.addEventListener('contextmenu', (event) =>
 {
-    var mousePosistion = new THREE.Vector2();
-    mousePosistion.x = event.clientX;
-    mousePosistion.y = event.clientY;
-    square.position.x = mousePosistion.x - width/2
-    square.position.y = -mousePosistion.y + height/2
+    isMoving = true;
+    let targetX = event.clientX - width/2;
+    let targetY = -event.clientY + height/2;
+    let distX = square.position.x-targetX;
+    let distY = square.position.y-targetY;
+    let ratio = Math.abs(distX/distY);
+    speedX = ratio / (1 + ratio);
+    speedY = 1 - speedX;
+    speedX *= 10;
+    speedY *= 10;
+    isMoving = true;
+    if(distX > 0)
+      speedX = -speedX
+    if(distY > 0)
+      speedY = -speedY
 })
+
+
+function update() {
+  if(isMoving){
+    square.position.x += speedX;
+    square.position.y += speedY;
+  }
+}
+
