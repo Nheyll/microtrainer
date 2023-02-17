@@ -38,11 +38,15 @@ export const initCharacter = function () {
     character = new THREE.Mesh( geometry, material );
     scene.add( character );
     window.addEventListener('contextmenu', (event) => {
-        move(event);
+        onMove(event);
     })
 }
 
-const move = function(event) {
+export const updateCharacter = function() {
+    updateMove()
+}
+
+const onMove = function(event) {
     targetX = event.clientX - windowWidth/2;
     targetY = -event.clientY + windowHeight/2;
     setDirection();
@@ -66,23 +70,6 @@ const move = function(event) {
     moveX = -moveX
     if(distY > 0)
     moveY = -moveY
-
-}
-
-
-export const updateCharacter = function() {
-    checkMoveEnd();
-    if(moveDirection != Direction.NOT_MOVING){
-        currentX += moveX;
-        currentY += moveY;
-        character.position.x = currentX;
-        character.position.y = currentY;
-    } else {
-        character.position.x = targetX;
-        character.position.y = targetY;
-        currentX = targetX;
-        currentY = targetY;
-    }
 }
 
 const setDirection = function () {
@@ -101,7 +88,7 @@ const setDirection = function () {
     }
 }
 
-const checkMoveEnd = function() {
+const updateMove = function() {
     if (moveDirection == Direction.NE && (currentX+moveX > targetX || currentY+moveY > targetY)){
         moveDirection = Direction.NOT_MOVING;
     } else if (moveDirection == Direction.NW && (currentX+moveX < targetX || currentY+moveY > targetY)){
@@ -110,5 +97,17 @@ const checkMoveEnd = function() {
         moveDirection = Direction.NOT_MOVING;
     } else if (moveDirection == Direction.SW && (currentX+moveX < targetX || currentY+moveY < targetY)){
         moveDirection = Direction.NOT_MOVING;
+    }
+
+    if(moveDirection != Direction.NOT_MOVING){
+        currentX += moveX;
+        currentY += moveY;
+        character.position.x = currentX;
+        character.position.y = currentY;
+    } else {
+        character.position.x = targetX;
+        character.position.y = targetY;
+        currentX = targetX;
+        currentY = targetY;
     }
 }
