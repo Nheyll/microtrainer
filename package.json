@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/brunosimon/webpack-three-js-template.git"
+    "url": "git+https://github.com/Nheyll/microtrainer.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Nheyll",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/brunosimon/webpack-three-js-template/issues"
+    "url": "https://https://github.com/Nheyll/microtrainer/issues"
   },
-  "homepage": "https://github.com/brunosimon/webpack-three-js-template#readme",
+  "homepage": "https://https://github.com/Nheyll/microtrainer/tree/main",
   "devDependencies": {
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
