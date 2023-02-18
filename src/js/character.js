@@ -1,5 +1,5 @@
-import * as THREE from 'three'
-import {scene, windowWidth, windowHeight} from "./sceneManager"
+import * as THREE from 'three';
+import {scene, windowWidth, windowHeight} from './sceneManager';
 
 /* State */
 /** Calculated values (do not set manually) **/
@@ -17,13 +17,13 @@ let target = new THREE.Vector2(0,0);
 
 /*** Character direction ***/
 const Direction = {
-    NW: "North-West",
-    NE: "North-East",
-    SE: "South-East",
-    SW: "South-West",
-    NOT_MOVING: "Stopped"
-}
-let moveDirection = "";
+    NW: 'North-West',
+    NE: 'North-East',
+    SE: 'South-East',
+    SW: 'South-West',
+    NOT_MOVING: 'Stopped'
+};
+let moveDirection = '';
 
 /** Character stats **/
 /*** Character movespeed ***/
@@ -36,20 +36,20 @@ export const initCharacter = function () {
     scene.add( character );
     window.addEventListener('contextmenu', (event) => {
         onMove(event);
-    })
-}
+    });
+};
 
 export const updateCharacter = function() {
-    updateMove()
-}
+    updateMove();
+};
 
 const onMove = function(event) {
     target.set(event.clientX - windowWidth/2, -event.clientY + windowHeight/2);
     setDirection();
-    let dist = new THREE.Vector2(character.position.x-target.x, character.position.y-target.y)
+    let dist = new THREE.Vector2(character.position.x-target.x, character.position.y-target.y);
     if(dist.x != 0 && dist.y != 0) {
         let ratio = Math.abs(dist.x/dist.y);
-        move.setX(ratio / (1 + ratio) * moveSpeed)
+        move.setX(ratio / (1 + ratio) * moveSpeed);
         move.setY(moveSpeed - move.x);
     } else if (dist.x == 0 && dist.y != 0) {
         move.set(0, moveSpeed);
@@ -62,7 +62,7 @@ const onMove = function(event) {
         move.setX(-move.x);
     if(dist.y > 0)
         move.setY(-move.y);
-}
+};
 
 const setDirection = function () {
     if(target.x > current.x){
@@ -78,7 +78,7 @@ const setDirection = function () {
             moveDirection = Direction.SW;
         }
     }
-}
+};
 
 const updateMove = function() {
     if (moveDirection == Direction.NE && (current.x+move.x > target.x || current.y+move.y > target.y)){
@@ -100,4 +100,4 @@ const updateMove = function() {
         character.position.y = target.y;
         current.set(target.x, target.y);
     }
-}
+};
