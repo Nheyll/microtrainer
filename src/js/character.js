@@ -7,16 +7,13 @@ import {scene, windowWidth, windowHeight} from "./sceneManager"
 let character;
 
 /*** movement for each renderer update ***/
-let moveX = 0;
-let moveY = 0;
+let move = new THREE.Vector2(0,0);
 
 /*** current position ***/
-let currentX = 0;
-let currentY = 0;
+let current = new THREE.Vector2(0,0);
 
 /*** cursor position when player last right clicked ***/
-let targetX = 0;
-let targetY = 0;
+let target = new THREE.Vector2(0,0);
 
 /*** Character direction ***/
 const Direction = {
@@ -47,40 +44,35 @@ export const updateCharacter = function() {
 }
 
 const onMove = function(event) {
-    targetX = event.clientX - windowWidth/2;
-    targetY = -event.clientY + windowHeight/2;
+    target.set(event.clientX - windowWidth/2, -event.clientY + windowHeight/2);
     setDirection();
-    let distX = character.position.x-targetX;
-    let distY = character.position.y-targetY;
-    if(distX != 0 && distY != 0) {
-        let ratio = Math.abs(distX/distY);
-        moveX = ratio / (1 + ratio) * moveSpeed;
-        moveY = moveSpeed - moveX;
-    } else if (distX == 0 && distY != 0) {
-        moveX = 0;
-        moveY = moveSpeed;
-    } else if (distX != 0 && distY == 0) {
-        moveX = moveSpeed;
-        moveY = 0;
+    let dist = new THREE.Vector2(character.position.x-target.x, character.position.y-target.y)
+    if(dist.x != 0 && dist.y != 0) {
+        let ratio = Math.abs(dist.x/dist.y);
+        move.setX(ratio / (1 + ratio) * moveSpeed)
+        move.setY(moveSpeed - move.x);
+    } else if (dist.x == 0 && dist.y != 0) {
+        move.set(0, moveSpeed);
+    } else if (dist.x != 0 && dist.y == 0) {
+        move.set(moveSpeed, 0);
     } else {
-        moveX = 0;
-        moveY = 0;
+        move.set(0, 0);
     }
-    if(distX > 0)
-    moveX = -moveX
-    if(distY > 0)
-    moveY = -moveY
+    if(dist.x > 0)
+        move.setX(-move.x);
+    if(dist.y > 0)
+        move.setY(-move.y);
 }
 
 const setDirection = function () {
-    if(targetX > currentX){
-        if(targetY > currentY) {
+    if(target.x > current.x){
+        if(target.y > current.y) {
             moveDirection = Direction.NE;
         }else{
             moveDirection = Direction.SE;
         }
     } else {
-        if(targetY > currentY) {
+        if(target.y > current.y) {
             moveDirection = Direction.NW;
         }else{
             moveDirection = Direction.SW;
@@ -89,25 +81,23 @@ const setDirection = function () {
 }
 
 const updateMove = function() {
-    if (moveDirection == Direction.NE && (currentX+moveX > targetX || currentY+moveY > targetY)){
+    if (moveDirection == Direction.NE && (current.x+move.x > target.x || current.y+move.y > target.y)){
         moveDirection = Direction.NOT_MOVING;
-    } else if (moveDirection == Direction.NW && (currentX+moveX < targetX || currentY+moveY > targetY)){
+    } else if (moveDirection == Direction.NW && (current.x+move.x < target.x || current.y+move.y > target.y)){
         moveDirection = Direction.NOT_MOVING;
-    } else if (moveDirection == Direction.SE && (currentX+moveX > targetX || currentY+moveY < targetY)){
+    } else if (moveDirection == Direction.SE && (current.x+move.x > target.x || current.y+move.y < target.y)){
         moveDirection = Direction.NOT_MOVING;
-    } else if (moveDirection == Direction.SW && (currentX+moveX < targetX || currentY+moveY < targetY)){
+    } else if (moveDirection == Direction.SW && (current.x+move.x < target.x || current.y+move.y < target.y)){
         moveDirection = Direction.NOT_MOVING;
     }
 
     if(moveDirection != Direction.NOT_MOVING){
-        currentX += moveX;
-        currentY += moveY;
-        character.position.x = currentX;
-        character.position.y = currentY;
+        current.set(current.x + move.x, current.y + move.y);
+        character.position.x = current.x;
+        character.position.y = current.y;
     } else {
-        character.position.x = targetX;
-        character.position.y = targetY;
-        currentX = targetX;
-        currentY = targetY;
+        character.position.x = target.x;
+        character.position.y = target.y;
+        current.set(target.x, target.y);
     }
 }
