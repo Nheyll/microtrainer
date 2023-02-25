@@ -4,7 +4,7 @@ import {scene, windowWidth, windowHeight} from './sceneManager';
 /* State */
 /** Calculated values (do not set manually) **/
 /*** Character ***/
-let character;
+export let character;
 
 /*** movement for each renderer update ***/
 let move = new THREE.Vector2(0,0);
@@ -30,7 +30,7 @@ let moveDirection = '';
 let moveSpeed = 5;
 
 export const initCharacter = function () {
-    const geometry = new THREE.CircleGeometry( 50, 32 );
+    const geometry = new THREE.PlaneGeometry( 100, 100, 1, 1 );    
     const material = new THREE.MeshBasicMaterial( { color: 0xff0000, side: THREE.DoubleSide } );
     character = new THREE.Mesh( geometry, material );
     scene.add( character );

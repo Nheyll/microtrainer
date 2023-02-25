@@ -30,4 +30,10 @@ window.addEventListener('resize', () => {
     camera.bottom = -windowHeight / 2;
     camera.updateProjectionMatrix();      
 });
-  
+
+export const removeMesh = function (mesh) {
+    scene.remove(mesh);
+    mesh.geometry.dispose();
+    mesh.material.dispose();
+    mesh = undefined;
+};

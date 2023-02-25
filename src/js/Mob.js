@@ -7,21 +7,21 @@ export class Mob {
     
 
     constructor() {
-        this.hitbox = null; 
+        this.mobMesh = null; 
     }
 
     spawn(x, y) {
-        const geometry = new THREE.CircleGeometry( 50, 32 );
+        const geometry = new THREE.PlaneGeometry( 100, 100, 1, 1 ); 
         const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
-        this.hitbox = new THREE.Mesh( geometry, material );
-        scene.add( this.hitbox );
-        this.hitbox.position.x = x;
-        this.hitbox.position.y = y;
-        scene.add( this.hitbox );
+        this.mobMesh = new THREE.Mesh( geometry, material );
+        scene.add( this.mobMesh );
+        this.mobMesh.position.x = x;
+        this.mobMesh.position.y = y;
+        scene.add( this.mobMesh );
     }
 
     fireProjectile() {
-        const projectile = new Projectile(this.hitbox.position.x,  this.hitbox.position.y, new Vector2(1, 0));
+        const projectile = new Projectile(this.mobMesh.position.x,  this.mobMesh.position.y, new Vector2(0, -1));
         projectiles.push(projectile);
     }
 }
